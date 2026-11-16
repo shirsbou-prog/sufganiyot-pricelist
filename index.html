@@ -136,8 +136,8 @@
       <li>הזמנות לנר ראשון (שישי 4.12): עד יום רביעי 2.12 בשעה 16:00</li>
       <li>לשאר ימי החג אפשר להזמין עד יומיים לפני. למשל, לאיסוף ביום ראשון מזמינים עד יום שישי</li>
       <li>איסוף בימי החג: 15:00 עד 17:00 מהקונדיטוריה</li>
-      <li>איסוף בימי שישי: 10:00 עד 12:00 מהקונדיטוריה, או מנקודות המכירה בנחלים ובמזור עד 13:00</li>
-      <li>אין איסופים בשבת (5.12) וביום שני (7.12)</li>
+      <li>איסוף בימי שישי: 10:00 עד 12:00 מהקונדיטוריה, או מנקודות המכירה עד 13:00: נחלים (מחלבת מקרוביץ) ומזור (ליד הצרכנייה)</li>
+      <li>אין איסופים בשבת (5.12) וביום שני (7.12), אבל אפשר להזמין דרך האתר בכל יום לימים הבאים</li>
     </ul>
   </div>
 
@@ -168,7 +168,7 @@
   var WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzd3oU3RBYeDIyzjAxTQBFQSgEGi9mq51pSVzOVYLV2cY2vzbplWxnUO0TtkCkg5fDg/exec";
   var WA = "972534247937";
   var BOX = [[20,290],[15,220],[5,75]];
-  var FLAVORS = ["בואנו","בראוניז","אגוזי לוז","אוראו","קראנץ' קורנפלקס","פטיסייר וניל","פיסטוק","ריבת חלב"];
+  var FLAVORS = ["קינדר בואנו (מהדרין)","נוטלה (מהדרין)","פיסטוק","פטיסייר","קרם ברולה וקרמל","בייגלה מלוח","שוקולד לבן"];
   var JAM = 10, SFENJ = 29, FRIC8 = 180, FRIC12 = 260, SEP = 40;
   // pickup days; cutoff in Israel time (UTC+2 in December)
   var DAYS = [
@@ -179,7 +179,7 @@
     {id:"10.12", label:"חמישי 10.12", cutoff:"2026-12-08T23:59:00+02:00", cutTxt:"עד שלישי 8.12"},
     {id:"11.12", label:"שישי 11.12", fri:true, cutoff:"2026-12-09T23:59:00+02:00", cutTxt:"עד רביעי 9.12"}
   ];
-  var PLACES_FRI = [["הקונדיטוריה במזור","10:00 עד 12:00"],["נקודת המכירה בנחלים","עד 13:00"],["נקודת המכירה במזור","עד 13:00"]];
+  var PLACES_FRI = [["הקונדיטוריה במזור","10:00 עד 12:00"],["נחלים, מחלבת מקרוביץ","עד 13:00"],["מזור, ליד הצרכנייה","עד 13:00"]];
 
   var s = {fl:FLAVORS.map(function(){return 0}), jam:0, sfSugar:0, sfPowder:0, f8:0, f12:0, date:null, place:null};
 
@@ -191,7 +191,7 @@
   }
   document.getElementById('flavors').innerHTML = FLAVORS.map(function(f,i){return stepperRow('fl',i,f,'','')}).join('');
   document.getElementById('jam').innerHTML = stepperRow('jam','','סופגניית ריבה','','10 ₪','jam.jpg');
-  document.getElementById('sfenj').innerHTML = stepperRow('sfSugar','',"ספינג' מצופה סוכר",'6 יחידות','29 ₪','') + stepperRow('sfPowder','',"ספינג' אבקת סוכר",'6 יחידות','29 ₪','');
+  document.getElementById('sfenj').innerHTML = stepperRow('sfSugar','',"ספינג' מצופה סוכר",'6 יחידות','29 ₪','sfenj-sugar.jpg') + stepperRow('sfPowder','',"ספינג' אבקת סוכר",'6 יחידות','29 ₪','sfenj-powder.jpg');
   document.getElementById('fric').innerHTML = stepperRow('f8','','מארז 8 פריקסה','','180 ₪','fricassee.jpg') + stepperRow('f12','','מארז 12 פריקסה','','260 ₪','fricassee.jpg');
 
   var now = new Date();
