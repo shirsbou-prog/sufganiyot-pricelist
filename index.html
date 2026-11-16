@@ -37,9 +37,26 @@
   .stepper button{width:32px;height:32px;border-radius:50%;border:2px solid #D4AF37;background:#fff;font-size:20px;font-weight:800;line-height:1;cursor:pointer;color:#000;padding:0}
   .stepper button.inc{background:#D4AF37}
   .stepper .q{min-width:22px;text-align:center;font-weight:800;font-size:17px}
-  .boxes{display:flex;gap:8px;margin-bottom:14px}
-  .boxes div{flex:1;background:#FFD6E0;border:1.5px solid #D4AF37;border-radius:10px;text-align:center;padding:8px 4px;font-weight:800;font-size:14px;line-height:1.35}
-  .boxes div span{display:block;color:#8a6d1a;font-size:18px}
+  .boxes{display:flex;gap:8px;margin-bottom:6px}
+  .boxes button{flex:1;background:#FFD6E0;border:1.5px solid #D4AF37;border-radius:10px;text-align:center;padding:8px 4px;font-family:inherit;font-weight:800;font-size:14px;line-height:1.35;cursor:pointer;color:#000}
+  .boxes button span{display:block;color:#8a6d1a;font-size:18px}
+  .boxes button em{display:block;font-style:normal;background:#000;color:#fff;border-radius:6px;margin:6px 6px 0;padding:3px 0;font-size:13px}
+  .box{border:2px solid #D4AF37;border-radius:12px;margin-top:14px;overflow:hidden;background:#fff}
+  .box.full{border-color:#7cbf88}
+  .boxhead{display:flex;align-items:center;gap:8px;background:#fff8e6;padding:10px 12px;font-weight:800}
+  .box.full .boxhead{background:#e8f6ea}
+  .boxhead .bt{flex:1;font-size:16px}
+  .boxhead .bc{font-size:14px;color:#8a6d1a;white-space:nowrap}
+  .box.full .boxhead .bc{color:#2e7d3a}
+  .boxbody{padding:0 12px}
+  .boxfoot{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #f1e3e8}
+  .boxfoot button,.boxhead button{font-family:inherit;font-weight:800;font-size:13.5px;border-radius:8px;padding:7px 12px;cursor:pointer}
+  .bdone{background:#000;color:#fff;border:0;flex:1}
+  .bdone:disabled{opacity:.35;cursor:default}
+  .bedit{background:#fff;border:1.5px solid #D4AF37;color:#000}
+  .bdel{background:transparent;border:0;color:#a0465a;text-decoration:underline;padding:4px !important}
+  .boxlist{padding:8px 12px;font-size:14px;line-height:1.6;color:#333}
+  .stepper button:disabled{opacity:.3;cursor:default}
   .counter{margin-top:10px;padding:10px 12px;border-radius:8px;font-weight:800;font-size:14.5px;background:#fff6d9;border:1px solid #D4AF37;line-height:1.45}
   .counter.ok{background:#e8f6ea;border-color:#7cbf88}
   .opt{display:block;border:1.5px solid #ead7dd;border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff;cursor:pointer;font-size:15px}
@@ -89,14 +106,13 @@
   <div class="block">
     <div class="h">סופגניות בריוש</div>
     <div class="sub">סופגניות איכות מבצק בריוש חמאה, בעבודת יד ובאהבה רבה.<br>נמכרות במארזים בלבד, ואפשר לערבב מכל הטעמים.</div>
+    <div class="sub" style="font-size:14px;margin-bottom:8px">בחרו מארז, בחרו את הטעמים שייכנסו אליו, ואנחנו נרכיב לכם אותו:</div>
     <div class="boxes">
-      <div>מארז 5<span>75 ₪</span></div>
-      <div>מארז 15<span>220 ₪</span></div>
-      <div>מארז 20<span>290 ₪</span></div>
+      <button type="button" data-add="5">מארז 5<span>75 ₪</span><em>+ בחירה</em></button>
+      <button type="button" data-add="15">מארז 15<span>220 ₪</span><em>+ בחירה</em></button>
+      <button type="button" data-add="20">מארז 20<span>290 ₪</span><em>+ בחירה</em></button>
     </div>
-    <div class="sub" style="font-size:14px;margin-bottom:4px">בחרו כמה מכל טעם, ואנחנו נסדר לכם את המארזים הכי משתלמים:</div>
-    <div id="flavors"></div>
-    <div class="counter" id="counter">בחרו לפחות 5 סופגניות</div>
+    <div id="boxList"></div>
   </div>
 
   <div class="block">
@@ -179,7 +195,7 @@
 (function(){
   var WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzd3oU3RBYeDIyzjAxTQBFQSgEGi9mq51pSVzOVYLV2cY2vzbplWxnUO0TtkCkg5fDg/exec";
   var WA = "972534247937";
-  var BOX = [[20,290],[15,220],[5,75]];
+  var BOX_PRICE = {5:75, 15:220, 20:290};
   var FLAVORS = ["קינדר בואנו (מהדרין)","נוטלה (מהדרין)","פיסטוק","פטיסייר","קרם ברולה וקרמל","בייגלה מלוח","שוקולד לבן","אוראו","עוגיות קרמל (לוטוס)"];
   var FLAVOR_IMG = ["fl-bueno.jpg","fl-nutella.jpg","fl-pistachio.jpg","fl-patissier.jpg","fl-brulee.jpg","fl-pretzel.jpg","fl-whitechoc.jpg","fl-oreo.jpg","fl-lotus.jpg"];
   var JAM = 10, SFENJ = 29, FRIC8 = 180, FRIC12 = 260, SEP = 40;
@@ -194,7 +210,7 @@
   ];
   var PLACES_FRI = [["הקונדיטוריה במזור","10:00 עד 12:00"],["נחלים, ארץ זבת חלב (מחלבת מרקוביץ)","עד 13:00"],["מזור, ליד הצרכנייה","עד 13:00"]];
 
-  var s = {fl:FLAVORS.map(function(){return 0}), jam:0, sfSugar:0, sfPowder:0, f8:0, f12:0, date:null, place:null};
+  var s = {boxes:[], jam:0, sfSugar:0, sfPowder:0, f8:0, f12:0, date:null, place:null};
 
   function stepperRow(key, idx, name, sub, price, img){
     return '<div class="row">' + (img ? '<img class="thumb" src="files/'+img+'" alt="">' : '<span class="thumb"></span>') +
@@ -202,7 +218,6 @@
       '<div class="stepper"><button type="button" data-k="'+key+'" data-i="'+idx+'" data-d="-1" aria-label="פחות">−</button>' +
       '<span class="q" id="q_'+key+idx+'">0</span><button type="button" class="inc" data-k="'+key+'" data-i="'+idx+'" data-d="1" aria-label="עוד">+</button></div></div>';
   }
-  document.getElementById('flavors').innerHTML = FLAVORS.map(function(f,i){return stepperRow('fl',i,f,'','',FLAVOR_IMG[i])}).join('');
   document.getElementById('jam').innerHTML = stepperRow('jam','','סופגניית ריבה','','10 ₪','jam.jpg?v=2');
   document.getElementById('sfenj').innerHTML = stepperRow('sfSugar','',"ספינג' מצופה סוכר",'6 יחידות','29 ₪','sfenj-sugar.jpg') + stepperRow('sfPowder','',"ספינג' אבקת סוכר",'6 יחידות','29 ₪','sfenj-powder.jpg');
   document.getElementById('fric').innerHTML = stepperRow('f8','','מארז 8 פריקסה','','180 ₪','fricassee.jpg') + stepperRow('f12','','מארז 12 פריקסה','','260 ₪','fricassee.jpg');
@@ -215,31 +230,39 @@
       '<small>'+(closed ? 'ההזמנות ליום הזה נסגרו' : hours+' · הזמנה '+d.cutTxt)+'</small></label>';
   }).join('');
 
-  function bestBoxes(n){ // cheapest split of n (multiple of 5) into 5/15/20 boxes
-    var best=[0], pick=[null];
-    for(var x=5;x<=n;x+=5){ best[x]=Infinity;
-      BOX.forEach(function(b){ if(b[0]<=x && best[x-b[0]]+b[1]<best[x]){best[x]=best[x-b[0]]+b[1];pick[x]=b;} }); }
-    var out={20:0,15:0,5:0}, x2=n; while(x2>0){out[pick[x2][0]]++; x2-=pick[x2][0];}
-    return {price:best[n], boxes:out};
+  function boxCount(b){ return b.fl.reduce(function(x,y){return x+y},0); }
+  function boxLine(b){ return FLAVORS.map(function(f,i){ return b.fl[i] ? f+' × '+b.fl[i] : null; }).filter(Boolean).join(', '); }
+
+  function renderBoxes(){
+    document.getElementById('boxList').innerHTML = s.boxes.map(function(b,bi){
+      var n=boxCount(b), full=n===b.size;
+      var h='<div class="box'+(full?' full':'')+'" id="box'+bi+'"><div class="boxhead"><span class="bt">מארז '+b.size+' · '+BOX_PRICE[b.size]+' ₪</span>'+
+        '<span class="bc">'+(full?'המארז מלא ✓':'נבחרו '+n+' מתוך '+b.size)+'</span><button type="button" class="bdel" data-del="'+bi+'">הסרה</button></div>';
+      if(b.open){
+        h+='<div class="boxbody">'+FLAVORS.map(function(f,i){
+          return '<div class="row"><img class="thumb" src="files/'+FLAVOR_IMG[i]+'" alt=""><div class="name">'+f+'</div>'+
+            '<div class="stepper"><button type="button" data-k="bx" data-b="'+bi+'" data-i="'+i+'" data-d="-1" aria-label="פחות"'+(b.fl[i]?'':' disabled')+'>−</button>'+
+            '<span class="q">'+b.fl[i]+'</span><button type="button" class="inc" data-k="bx" data-b="'+bi+'" data-i="'+i+'" data-d="1" aria-label="עוד"'+(full?' disabled':'')+'>+</button></div></div>';
+        }).join('')+'</div><div class="boxfoot"><button type="button" class="bdone" data-done="'+bi+'"'+(full?'':' disabled')+'>'+(full?'סיימתי עם המארז הזה':'חסרות עוד '+(b.size-n)+' סופגניות')+'</button></div>';
+      } else {
+        h+='<div class="boxlist">'+(boxLine(b)||'עוד לא נבחרו טעמים')+'</div><div class="boxfoot"><button type="button" class="bedit" data-edit="'+bi+'">עריכת המארז</button></div>';
+      }
+      return h+'</div>';
+    }).join('');
   }
-  function flTotal(){ return s.fl.reduce(function(a,b){return a+b},0); }
-  function boxText(b){ var p=[]; [20,15,5].forEach(function(k){ if(b[k]) p.push((b[k]>1?b[k]+' × ':'')+'מארז '+k); }); return p.join(' + '); }
 
   function calc(){
-    var n=flTotal(), sufg=0, bx=null;
-    if(n>0 && n%5===0){ bx=bestBoxes(n); sufg=bx.price; }
+    var sufg=0, bx={5:0,15:0,20:0}, fl=FLAVORS.map(function(){return 0}), missing=-1;
+    s.boxes.forEach(function(b,bi){ sufg+=BOX_PRICE[b.size]; bx[b.size]++; b.fl.forEach(function(v,i){fl[i]+=v}); if(missing<0 && boxCount(b)<b.size) missing=bi; });
     var fricBoxes=s.f8+s.f12;
     var sep=document.getElementById('sep').checked && fricBoxes>0;
     var total = sufg + s.jam*JAM + (s.sfSugar+s.sfPowder)*SFENJ + s.f8*FRIC8 + s.f12*FRIC12 + (sep?fricBoxes*SEP:0);
-    return {n:n, bx:bx, sufg:sufg, sep:sep, total:total, fricBoxes:fricBoxes};
+    return {bx:bx, fl:fl, missing:missing, sufg:sufg, sep:sep, total:total, fricBoxes:fricBoxes};
   }
 
   function summary(c){
     var L=[];
-    if(c.n>0){
-      L.push('סופגניות בריוש: '+c.n+' יח\''+(c.bx?' ('+boxText(c.bx.boxes)+') · '+c.sufg+' ₪':''));
-      FLAVORS.forEach(function(f,i){ if(s.fl[i]) L.push('   '+f+' × '+s.fl[i]); });
-    }
+    s.boxes.forEach(function(b){ L.push('מארז '+b.size+' סופגניות · '+BOX_PRICE[b.size]+' ₪'); L.push('   '+(boxLine(b)||'עוד לא נבחרו טעמים')); });
     if(s.jam) L.push('סופגניית ריבה × '+s.jam+' · '+(s.jam*JAM)+' ₪');
     if(s.sfSugar) L.push("ספינג' מצופה סוכר (6 יח') × "+s.sfSugar+' · '+(s.sfSugar*SFENJ)+' ₪');
     if(s.sfPowder) L.push("ספינג' אבקת סוכר (6 יח') × "+s.sfPowder+' · '+(s.sfPowder*SFENJ)+' ₪');
@@ -250,12 +273,9 @@
   }
 
   function render(){
-    s.fl.forEach(function(v,i){ document.getElementById('q_fl'+i).textContent=v; });
+    renderBoxes();
     ['jam','sfSugar','sfPowder','f8','f12'].forEach(function(k){ document.getElementById('q_'+k).textContent=s[k]; });
-    var c=calc(), ctr=document.getElementById('counter');
-    if(c.n===0){ ctr.className='counter'; ctr.textContent='בחרו לפחות 5 סופגניות'; }
-    else if(c.n%5){ var miss=5-c.n%5; ctr.className='counter'; ctr.textContent='נבחרו '+c.n+'. חסרות עוד '+miss+' להשלמת מארז (המארזים הם של 5, 15 או 20)'; }
-    else { ctr.className='counter ok'; ctr.textContent='נבחרו '+c.n+' סופגניות: '+boxText(c.bx.boxes)+' · '+c.sufg+' ₪'; }
+    var c=calc();
     document.getElementById('sepWrap').classList.toggle('hidden', c.fricBoxes===0);
     var L=summary(c);
     document.getElementById('sum').textContent = L.length ? L.join('\n') : 'עוד לא נבחרו מוצרים';
@@ -277,9 +297,17 @@
     var im=e.target.closest('img.thumb');
     if(im){ lb.querySelector('img').src=im.src; lb.querySelector('div').textContent=im.closest('.row').querySelector('.name').firstChild.textContent; lb.classList.remove('hidden'); return; }
     if(e.target.closest('#lb')){ lb.classList.add('hidden'); return; }
+    var add=e.target.closest('[data-add]');
+    if(add){ s.boxes.forEach(function(b){ if(boxCount(b)===b.size) b.open=false; });
+      s.boxes.push({size:+add.dataset.add, fl:FLAVORS.map(function(){return 0}), open:true}); err(''); render();
+      document.getElementById('box'+(s.boxes.length-1)).scrollIntoView({behavior:'smooth',block:'start'}); return; }
+    var x;
+    if((x=e.target.closest('[data-del]'))){ s.boxes.splice(+x.dataset.del,1); render(); return; }
+    if((x=e.target.closest('[data-done]'))){ s.boxes[+x.dataset.done].open=false; render(); return; }
+    if((x=e.target.closest('[data-edit]'))){ s.boxes[+x.dataset.edit].open=true; render(); return; }
     var b=e.target.closest('.stepper button'); if(!b) return;
     var k=b.dataset.k, d=+b.dataset.d;
-    if(k==='fl'){ var i=+b.dataset.i; s.fl[i]=Math.max(0,Math.min(99,s.fl[i]+d)); }
+    if(k==='bx'){ var bo=s.boxes[+b.dataset.b], i=+b.dataset.i; if(d>0 && boxCount(bo)>=bo.size) return; bo.fl[i]=Math.max(0,bo.fl[i]+d); }
     else s[k]=Math.max(0,Math.min(99,s[k]+d));
     err(''); render();
   });
@@ -299,7 +327,8 @@
   document.getElementById('send').addEventListener('click', function(){
     var c=calc(), name=document.getElementById('fullName'), phone=document.getElementById('phone');
     if(c.total===0) return err('צריך לבחור לפחות מוצר אחד');
-    if(c.n%5) return err('הסופגניות נמכרות במארזים של 5, 15 או 20. חסרות עוד '+(5-c.n%5)+' להשלמת מארז');
+    if(c.missing>=0){ var mb=s.boxes[c.missing]; mb.open=true; render(); document.getElementById('box'+c.missing).scrollIntoView({behavior:'smooth',block:'start'});
+      return err('במארז '+mb.size+' חסרות עוד '+(mb.size-boxCount(mb))+' סופגניות'); }
     if(s.date===null) return err('נא לבחור יום איסוף');
     if(new Date() > new Date(DAYS[s.date].cutoff)) return err('ההזמנות ליום הזה כבר נסגרו, נא לבחור יום אחר');
     if(DAYS[s.date].fri && s.place===null) return err('נא לבחור מאיפה אוספים');
@@ -315,9 +344,9 @@
       '\n\nאשמח לקבל קישור לתשלום';
 
     var p = {form:'hanukkah', pickupDay:DAYS[s.date].id, place:placeText(), fullName:name.value.trim(), phone:phone.value.trim(),
-      box5:c.bx?c.bx.boxes[5]:0, box15:c.bx?c.bx.boxes[15]:0, box20:c.bx?c.bx.boxes[20]:0,
+      box5:c.bx[5], box15:c.bx[15], box20:c.bx[20],
       jam:s.jam, sfSugar:s.sfSugar, sfPowder:s.sfPowder, f8:s.f8, f12:s.f12, sep:c.sep?'כן':'לא', note:note, total:c.total, summary:L.join('\n')};
-    FLAVORS.forEach(function(f,i){ p['fl'+i]=s.fl[i]; });
+    FLAVORS.forEach(function(f,i){ p['fl'+i]=c.fl[i]; });
     var btn=this; btn.disabled=true; btn.lastChild.textContent='שולחים...';
     var go=function(){ location.href='https://wa.me/'+WA+'?text='+encodeURIComponent(msg); btn.disabled=false; btn.lastChild.textContent='שליחת ההזמנה בוואטסאפ'; };
     try{
