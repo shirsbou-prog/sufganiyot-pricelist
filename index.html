@@ -181,6 +181,7 @@
   var WA = "972534247937";
   var BOX = [[20,290],[15,220],[5,75]];
   var FLAVORS = ["קינדר בואנו (מהדרין)","נוטלה (מהדרין)","פיסטוק","פטיסייר","קרם ברולה וקרמל","בייגלה מלוח","שוקולד לבן","אוראו","עוגיות קרמל (לוטוס)"];
+  var FLAVOR_IMG = ["fl-bueno.jpg","fl-nutella.jpg","fl-pistachio.jpg","fl-patissier.jpg","fl-brulee.jpg","fl-pretzel.jpg","fl-whitechoc.jpg","fl-oreo.jpg","fl-lotus.jpg"];
   var JAM = 10, SFENJ = 29, FRIC8 = 180, FRIC12 = 260, SEP = 40;
   // pickup days; cutoff in Israel time (UTC+2 in December)
   var DAYS = [
@@ -201,7 +202,7 @@
       '<div class="stepper"><button type="button" data-k="'+key+'" data-i="'+idx+'" data-d="-1" aria-label="פחות">−</button>' +
       '<span class="q" id="q_'+key+idx+'">0</span><button type="button" class="inc" data-k="'+key+'" data-i="'+idx+'" data-d="1" aria-label="עוד">+</button></div></div>';
   }
-  document.getElementById('flavors').innerHTML = FLAVORS.map(function(f,i){return stepperRow('fl',i,f,'','')}).join('');
+  document.getElementById('flavors').innerHTML = FLAVORS.map(function(f,i){return stepperRow('fl',i,f,'','',FLAVOR_IMG[i])}).join('');
   document.getElementById('jam').innerHTML = stepperRow('jam','','סופגניית ריבה','','10 ₪','jam.jpg');
   document.getElementById('sfenj').innerHTML = stepperRow('sfSugar','',"ספינג' מצופה סוכר",'6 יחידות','29 ₪','sfenj-sugar.jpg') + stepperRow('sfPowder','',"ספינג' אבקת סוכר",'6 יחידות','29 ₪','sfenj-powder.jpg');
   document.getElementById('fric').innerHTML = stepperRow('f8','','מארז 8 פריקסה','','180 ₪','fricassee.jpg') + stepperRow('f12','','מארז 12 פריקסה','','260 ₪','fricassee.jpg');
