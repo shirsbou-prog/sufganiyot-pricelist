@@ -85,6 +85,8 @@
   .bar.hide{transform:translateY(110%)}
   .bar b{color:#D4AF37;font-size:20px}
   .bar a{background:#D4AF37;color:#000;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:15px}
+  .places{margin:-2px 14px 12px 0;padding:12px 12px 4px;border-right:3px solid #D4AF37;background:#fffaf0;border-radius:0 0 10px 10px}
+  .places .ph{font-weight:800;font-size:15px;margin-bottom:8px}
   .hidden{display:none}
 </style>
 </head>
@@ -138,11 +140,10 @@
     <div class="h">מתי אוספים?</div>
     <div class="sub">כדאי לשריין מראש. מזמינים עד יומיים לפני יום האיסוף.</div>
     <div id="dates"></div>
-  </div>
-
-  <div class="block hidden" id="placeBlock">
-    <div class="h">מאיפה אוספים?</div>
-    <div id="places"></div>
+    <div class="places hidden" id="placeBlock">
+      <div class="ph">מאיפה אוספים ביום שישי?</div>
+      <div id="places"></div>
+    </div>
   </div>
 
   <div class="block">
@@ -284,7 +285,8 @@
     document.getElementById('bar').classList.toggle('hide', c.total===0);
     DAYS.forEach(function(d,i){ document.getElementById('d'+i).classList.toggle('on', s.date===i); });
     var day = s.date===null ? null : DAYS[s.date];
-    document.getElementById('placeBlock').classList.toggle('hidden', !day || !day.fri);
+    var pb=document.getElementById('placeBlock'); pb.classList.toggle('hidden', !day || !day.fri);
+    if(day && day.fri){ var dl=document.getElementById('d'+s.date); if(dl.nextSibling!==pb) dl.after(pb); }
     document.querySelectorAll('#places .opt').forEach(function(el,i){ el.classList.toggle('on', s.place===i); });
   }
 
