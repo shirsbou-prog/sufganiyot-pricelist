@@ -133,7 +133,7 @@
     <div class="h">פריקסה</div>
     <div class="sub">מארזים של 8 או 12 יחידות</div>
     <div id="fric"></div>
-    <label class="check hidden" id="sepWrap"><input type="checkbox" id="sep"><span>אני רוצה לחמניות ריקות ותוספות בנפרד<br><b style="color:#8a6d1a">בתוספת 40 ₪ לכל מארז</b></span></label>
+    <label class="check hidden" id="sepWrap"><input type="checkbox" id="sep"><span>אני רוצה לחמניות ריקות ואת התוספות בנפרד<br><b style="color:#8a6d1a">בתוספת 45 ₪ לכל מארז</b><small style="display:block;color:#7a4a57;font-size:12.5px;margin-top:4px;line-height:1.5">התוספות: טונה, תפוחי אדמה, ביצה קשה, זיתים, מלפפון חמוץ, מלפפון ועגבנייה קצוצים, טחינה, אריסה ולימון כבוש</small></span></label>
   </div>
 
   <div class="block">
@@ -200,7 +200,7 @@
   var BOX_PRICE = {5:75, 15:220, 20:290};
   var FLAVORS = ["קינדר בואנו (מהדרין)","נוטלה (מהדרין)","פיסטוק","פטיסייר","קרם ברולה וקרמל","בייגלה מלוח","שוקולד לבן","אוראו","עוגיות קרמל (לוטוס)"];
   var FLAVOR_IMG = ["fl-bueno.jpg","fl-nutella.jpg","fl-pistachio.jpg","fl-patissier.jpg","fl-brulee.jpg","fl-pretzel.jpg","fl-whitechoc.jpg","fl-oreo.jpg","fl-lotus.jpg"];
-  var JAM = 10, SFENJ = 29, FRIC8 = 180, FRIC12 = 260, SEP = 40;
+  var JAM = 10, SFENJ = 29, FRIC8 = 180, FRIC12 = 260, SEP = 45;
   // pickup days; cutoff in Israel time (UTC+2 in December)
   var DAYS = [
     {id:"4.12", label:"שישי 4.12 · נר ראשון", fri:true, places:"fri", cutoff:"2026-12-02T16:00:00+02:00", cutTxt:"עד רביעי 2.12 בשעה 16:00"},
@@ -273,7 +273,7 @@
     if(s.sfPowder) L.push("ספינג' אבקת סוכר (6 יח') × "+s.sfPowder+' · '+(s.sfPowder*SFENJ)+' ₪');
     if(s.f8) L.push('פריקסה מארז 8 × '+s.f8+' · '+(s.f8*FRIC8)+' ₪');
     if(s.f12) L.push('פריקסה מארז 12 × '+s.f12+' · '+(s.f12*FRIC12)+' ₪');
-    if(c.sep) L.push('לחמניות ותוספות בנפרד (+40 ₪ למארז) · '+(c.fricBoxes*SEP)+' ₪');
+    if(c.sep) L.push('פריקסה: לחמניות ריקות ותוספות בנפרד (+45 ₪ למארז) · '+(c.fricBoxes*SEP)+' ₪');
     return L;
   }
 
