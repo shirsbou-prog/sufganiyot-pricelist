@@ -141,7 +141,7 @@
     <div class="sub">כדאי לשריין מראש. מזמינים עד יומיים לפני יום האיסוף.</div>
     <div id="dates"></div>
     <div class="places hidden" id="placeBlock">
-      <div class="ph">מאיפה אוספים ביום שישי?</div>
+      <div class="ph" id="placeQ">מאיפה אוספים?</div>
       <div id="places"></div>
     </div>
   </div>
@@ -161,6 +161,7 @@
       <li>הזמנות לנר ראשון (שישי 4.12): עד יום רביעי 2.12 בשעה 16:00</li>
       <li>לשאר ימי החג אפשר להזמין עד יומיים לפני. למשל, לאיסוף ביום ראשון מזמינים עד יום שישי</li>
       <li>איסוף בימי החג: 15:00 עד 17:00 מהקונדיטוריה</li>
+      <li>איסוף בגוש שילה: ביום רביעי 9.12 בין 15:00 ל-17:00 בנקודת חלוקה (הכתובת תישלח בהמשך)</li>
       <li>איסוף בימי שישי: 10:00 עד 12:00 מהקונדיטוריה, או מנקודות המכירה עד 13:00: נחלים (ארץ זבת חלב, מחלבת מרקוביץ) ומזור (ליד הצרכנייה)</li>
       <li>אין איסופים בשבת (5.12) וביום שני (7.12), אבל אפשר להזמין דרך האתר בכל יום לימים הבאים</li>
     </ul>
@@ -202,14 +203,17 @@
   var JAM = 10, SFENJ = 29, FRIC8 = 180, FRIC12 = 260, SEP = 40;
   // pickup days; cutoff in Israel time (UTC+2 in December)
   var DAYS = [
-    {id:"4.12", label:"שישי 4.12 · נר ראשון", fri:true, cutoff:"2026-12-02T16:00:00+02:00", cutTxt:"עד רביעי 2.12 בשעה 16:00"},
+    {id:"4.12", label:"שישי 4.12 · נר ראשון", fri:true, places:"fri", cutoff:"2026-12-02T16:00:00+02:00", cutTxt:"עד רביעי 2.12 בשעה 16:00"},
     {id:"6.12", label:"ראשון 6.12", cutoff:"2026-12-04T23:59:00+02:00", cutTxt:"עד שישי 4.12"},
     {id:"8.12", label:"שלישי 8.12", cutoff:"2026-12-06T23:59:00+02:00", cutTxt:"עד ראשון 6.12"},
-    {id:"9.12", label:"רביעי 9.12", cutoff:"2026-12-07T23:59:00+02:00", cutTxt:"עד שני 7.12"},
+    {id:"9.12", label:"רביעי 9.12", places:"shilo", cutoff:"2026-12-07T23:59:00+02:00", cutTxt:"עד שני 7.12"},
     {id:"10.12", label:"חמישי 10.12", cutoff:"2026-12-08T23:59:00+02:00", cutTxt:"עד שלישי 8.12"},
-    {id:"11.12", label:"שישי 11.12", fri:true, cutoff:"2026-12-09T23:59:00+02:00", cutTxt:"עד רביעי 9.12"}
+    {id:"11.12", label:"שישי 11.12", fri:true, places:"fri", cutoff:"2026-12-09T23:59:00+02:00", cutTxt:"עד רביעי 9.12"}
   ];
-  var PLACES_FRI = [["הקונדיטוריה במזור","10:00 עד 12:00"],["נחלים, ארץ זבת חלב (מחלבת מרקוביץ)","עד 13:00"],["מזור, ליד הצרכנייה","עד 13:00"]];
+  var PLACES = {
+    fri: [["הקונדיטוריה במזור","10:00 עד 12:00"],["נחלים, ארץ זבת חלב (מחלבת מרקוביץ)","עד 13:00"],["מזור, ליד הצרכנייה","עד 13:00"]],
+    shilo: [["הקונדיטוריה במזור","15:00 עד 17:00"],["נקודת חלוקה בגוש שילה","15:00 עד 17:00 · הכתובת תישלח בהמשך"]]
+  };
 
   var s = {boxes:[], jam:0, sfSugar:0, sfPowder:0, f8:0, f12:0, date:null, place:null};
 
@@ -226,7 +230,7 @@
   var now = new Date();
   document.getElementById('dates').innerHTML = DAYS.map(function(d,i){
     var closed = now > new Date(d.cutoff);
-    var hours = d.fri ? "איסוף 10:00 עד 12:00, או מנקודות המכירה עד 13:00" : "איסוף 15:00 עד 17:00";
+    var hours = d.fri ? "איסוף 10:00 עד 12:00, או מנקודות המכירה עד 13:00" : d.places==="shilo" ? "איסוף 15:00 עד 17:00 · במזור או בגוש שילה" : "איסוף 15:00 עד 17:00";
     return '<label class="opt'+(closed?' off':'')+'" id="d'+i+'"><input type="radio" name="date" value="'+i+'"'+(closed?' disabled':'')+'>'+d.label+
       '<small>'+(closed ? 'ההזמנות ליום הזה נסגרו' : hours+' · הזמנה '+d.cutTxt)+'</small></label>';
   }).join('');
@@ -285,14 +289,15 @@
     document.getElementById('bar').classList.toggle('hide', c.total===0);
     DAYS.forEach(function(d,i){ document.getElementById('d'+i).classList.toggle('on', s.date===i); });
     var day = s.date===null ? null : DAYS[s.date];
-    var pb=document.getElementById('placeBlock'); pb.classList.toggle('hidden', !day || !day.fri);
-    if(day && day.fri){ var dl=document.getElementById('d'+s.date); if(dl.nextSibling!==pb) dl.after(pb); }
+    var pb=document.getElementById('placeBlock'), hasP=!!(day && day.places); pb.classList.toggle('hidden', !hasP);
+    if(hasP){ var dl=document.getElementById('d'+s.date); if(dl.nextSibling!==pb) dl.after(pb);
+      if(pb.dataset.set!==day.places){ pb.dataset.set=day.places;
+        document.getElementById('placeQ').textContent = day.fri ? 'מאיפה אוספים ביום שישי?' : 'מאיפה אוספים?';
+        document.getElementById('places').innerHTML = PLACES[day.places].map(function(p,i){
+          return '<label class="opt"><input type="radio" name="place" value="'+i+'">'+p[0]+'<small>'+p[1]+'</small></label>'; }).join(''); } }
     document.querySelectorAll('#places .opt').forEach(function(el,i){ el.classList.toggle('on', s.place===i); });
   }
 
-  document.getElementById('places').innerHTML = PLACES_FRI.map(function(p,i){
-    return '<label class="opt"><input type="radio" name="place" value="'+i+'">'+p[0]+'<small>'+p[1]+'</small></label>';
-  }).join('');
 
   var lb=document.getElementById('lb');
   document.addEventListener('click', function(e){
@@ -322,8 +327,8 @@
 
   function placeText(){
     var d=DAYS[s.date];
-    if(!d.fri) return 'הקונדיטוריה במזור, 15:00 עד 17:00';
-    var p=PLACES_FRI[s.place]; return p[0]+', '+p[1];
+    if(!d.places) return 'הקונדיטוריה במזור, 15:00 עד 17:00';
+    var p=PLACES[d.places][s.place]; return p[0]+', '+p[1];
   }
 
   document.getElementById('send').addEventListener('click', function(){
@@ -333,7 +338,7 @@
       return err('במארז '+mb.size+' חסרות עוד '+(mb.size-boxCount(mb))+' סופגניות'); }
     if(s.date===null) return err('נא לבחור יום איסוף');
     if(new Date() > new Date(DAYS[s.date].cutoff)) return err('ההזמנות ליום הזה כבר נסגרו, נא לבחור יום אחר');
-    if(DAYS[s.date].fri && s.place===null) return err('נא לבחור מאיפה אוספים');
+    if(DAYS[s.date].places && s.place===null) return err('נא לבחור מאיפה אוספים');
     if(!name.value.trim()) return err('נא למלא שם מלא', name);
     if(phone.value.replace(/\D/g,'').length<9) return err('נא למלא מספר טלפון תקין', phone);
 
