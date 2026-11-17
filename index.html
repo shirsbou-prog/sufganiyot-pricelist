@@ -15,9 +15,12 @@
   .card{background:#FFFBFC url('files/page-bg.jpg') center top/cover no-repeat;border:1px solid #FFD6E0;border-radius:10px;overflow:hidden;direction:rtl;max-width:480px;margin:0 auto}
   .hero{background:#FFD6E0 url('files/header-bg.jpg') center/cover no-repeat;padding:26px 18px 22px;text-align:center;min-height:290px}
   .glass{display:inline-flex;flex-direction:row;align-items:center;gap:16px;padding:10px 18px;border-radius:18px;background:rgba(255,255,255,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-  .title{font-weight:800;font-size:44px;line-height:1.2;color:#fff;-webkit-text-stroke:4px #5a3418;paint-order:stroke fill;text-shadow:0 14px 30px rgba(0,0,0,.7);margin-top:18px}
+  .title{font-weight:800;font-size:44px;line-height:1.2;color:#fff;-webkit-text-stroke:4px #5a3418;paint-order:stroke fill;text-shadow:0 6px 14px rgba(90,52,24,.25);margin-top:18px}
   .subt{display:inline-block;margin-top:12px;background:#000;color:#fff;font-weight:800;font-size:19px;padding:8px 20px;border-radius:30px;border:2px solid #D4AF37;box-shadow:0 6px 16px rgba(0,0,0,.3)}
   .subt b{color:#D4AF37}
+  .big{display:block;margin-top:16px;text-decoration:none;color:#000;background:#fff8e6;border:2px dashed #D4AF37;border-radius:12px;padding:12px 14px;text-align:center;font-size:14.5px;line-height:1.45}
+  .big span{display:block}
+  .big b{display:inline-block;margin-top:8px;background:#000;color:#fff;border-radius:8px;padding:7px 16px;font-size:15px}
   .strip{padding:12px 18px;background:#fff;border-bottom:1px solid #f1e3e8;font-size:12px;color:#555;display:flex;justify-content:space-between}
   .strip b{color:#8a6d1a}
   .content{background:#f3e3dc url('files/page-bg.jpg') center top/100% auto repeat-y;padding:16px 12px 4px}
@@ -133,6 +136,7 @@
       <button type="button" data-add="20">מארז 20 יח׳<span>290 ₪</span><em>+ בחירה</em></button>
     </div>
     <div id="boxList"></div>
+    <a class="big" id="bigOrder" target="_blank" rel="noopener"><span>יש לי משרד, אירוע או הזמנה גדולה ואני צריך יותר מ-90 יחידות</span><b>להצעת מחיר לחצו כאן</b></a>
   </div>
 
   <div class="block">
@@ -322,6 +326,7 @@
   }
 
 
+  document.getElementById('bigOrder').href='https://wa.me/'+WA+'?text='+encodeURIComponent('שלום, אני רוצה הצעת מחיר למעל 90 סופגניות');
   var lb=document.getElementById('lb');
   document.addEventListener('click', function(e){
     var mt=e.target.closest('img.mthumb');
