@@ -57,6 +57,19 @@
   .bdel{background:transparent;border:0;color:#a0465a;text-decoration:underline;padding:4px !important}
   .boxlist{padding:8px 12px;font-size:14px;line-height:1.6;color:#333}
   .stepper button:disabled{opacity:.3;cursor:default}
+  .pick{position:relative;background:#000;color:#fff;border-radius:14px;padding:13px 16px 13px 54px;font-weight:800;font-size:17px;line-height:1.4;margin:4px 0 22px;box-shadow:0 8px 20px rgba(0,0,0,.22);border:2px solid #D4AF37;animation:pickPulse 1.8s ease-in-out infinite}
+  .pick b{color:#D4AF37}
+  .pick:after{content:'';position:absolute;bottom:-12px;left:50%;margin-left:-12px;border:12px solid transparent;border-bottom:0;border-top-color:#000}
+  .pick .arw{position:absolute;left:14px;top:50%;margin-top:-17px;width:34px;height:34px;border-radius:50%;background:#D4AF37;color:#000;display:flex;align-items:center;justify-content:center;font-size:22px;animation:pickBounce 1s ease-in-out infinite}
+  @keyframes pickBounce{0%,100%{transform:translateY(-3px)}50%{transform:translateY(4px)}}
+  @keyframes pickPulse{0%,100%{box-shadow:0 8px 20px rgba(0,0,0,.22)}50%{box-shadow:0 8px 26px rgba(212,175,55,.65)}}
+  .boxes.wait button{animation:boxGlow 1.8s ease-in-out infinite}
+  @keyframes boxGlow{0%,100%{transform:scale(1)}50%{transform:scale(1.04);box-shadow:0 0 0 3px rgba(212,175,55,.45)}}
+  .menu{display:flex;gap:8px;overflow-x:auto;padding:4px 0 10px;margin-bottom:6px;scrollbar-width:none}
+  .menu::-webkit-scrollbar{display:none}
+  .menu figure{margin:0;flex:0 0 74px;text-align:center;font-size:11.5px;line-height:1.25;color:#5a3418;font-weight:800}
+  .menu img{width:74px;height:74px;border-radius:50%;object-fit:cover;border:2px solid #D4AF37;display:block;margin-bottom:4px;cursor:zoom-in}
+  @media (prefers-reduced-motion:reduce){.pick,.pick .arw,.boxes.wait button{animation:none}}
   .counter{margin-top:10px;padding:10px 12px;border-radius:8px;font-weight:800;font-size:14.5px;background:#fff6d9;border:1px solid #D4AF37;line-height:1.45}
   .counter.ok{background:#e8f6ea;border-color:#7cbf88}
   .opt{display:block;border:1.5px solid #ead7dd;border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff;cursor:pointer;font-size:15px}
@@ -108,8 +121,10 @@
   <div class="block">
     <div class="h">סופגניות בריוש</div>
     <div class="sub">סופגניות איכות מבצק בריוש חמאה, בעבודת יד ובאהבה רבה.<br>נמכרות במארזים בלבד, ואפשר לערבב מכל הטעמים.</div>
-    <div class="sub" style="font-size:14px;margin-bottom:8px">בחרו מארז, בחרו את הטעמים שייכנסו אליו, ואנחנו נרכיב לכם אותו:</div>
-    <div class="boxes">
+    <div class="sub" style="font-size:14px;margin-bottom:6px">הטעמים שלנו (לחיצה על תמונה מגדילה אותה):</div>
+    <div class="menu" id="menu"></div>
+    <div class="pick" id="pick"><span class="arw">↓</span>לבחירת טעמי הסופגניות, <b>לחצו על המארז</b> שתרצו להזמין! אחרי הבחירה ייפתח תפריט הטעמים</div>
+    <div class="boxes wait" id="boxBtns">
       <button type="button" data-add="5">מארז 5<span>75 ₪</span><em>+ בחירה</em></button>
       <button type="button" data-add="15">מארז 15<span>220 ₪</span><em>+ בחירה</em></button>
       <button type="button" data-add="20">מארז 20<span>290 ₪</span><em>+ בחירה</em></button>
@@ -198,8 +213,8 @@
   var WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzd3oU3RBYeDIyzjAxTQBFQSgEGi9mq51pSVzOVYLV2cY2vzbplWxnUO0TtkCkg5fDg/exec";
   var WA = "972534247937";
   var BOX_PRICE = {5:75, 15:220, 20:290};
-  var FLAVORS = ["קינדר בואנו (מהדרין)","נוטלה (מהדרין)","פיסטוק","פטיסייר","קרם ברולה וקרמל","בייגלה מלוח","שוקולד לבן","אוראו","עוגיות קרמל (לוטוס)"];
-  var FLAVOR_IMG = ["fl-bueno.jpg","fl-nutella.jpg","fl-pistachio.jpg","fl-patissier.jpg","fl-brulee.jpg","fl-pretzel.jpg","fl-whitechoc.jpg","fl-oreo.jpg","fl-lotus.jpg"];
+  var FLAVORS = ["קינדר בואנו (מהדרין)","נוטלה (מהדרין)","פיסטוק","פטיסייר","קרם ברולה וקרמל","בייגלה מלוח","שוקולד לבן","אוראו","עוגיות קרמל (לוטוס)","לימון מרנג (פאי לימון)"];
+  var FLAVOR_IMG = ["fl-bueno.jpg","fl-nutella.jpg","fl-pistachio.jpg","fl-patissier.jpg","fl-brulee.jpg","fl-pretzel.jpg","fl-whitechoc.jpg","fl-oreo.jpg","fl-lotus.jpg","fl-lemon.jpg"];
   var JAM = 10, SFENJ = 29, FRIC8 = 180, FRIC12 = 260, SEP = 45;
   // pickup days; cutoff in Israel time (UTC+2 in December)
   var DAYS = [
@@ -234,6 +249,9 @@
     return '<label class="opt'+(closed?' off':'')+'" id="d'+i+'"><input type="radio" name="date" value="'+i+'"'+(closed?' disabled':'')+'>'+d.label+
       '<small>'+(closed ? 'ההזמנות ליום הזה נסגרו' : hours+' · הזמנה '+d.cutTxt)+'</small></label>';
   }).join('');
+
+  document.getElementById('menu').innerHTML = FLAVORS.map(function(f,i){
+    return '<figure><img class="mthumb" src="files/'+FLAVOR_IMG[i]+'" alt="'+f+'">'+f+'</figure>'; }).join('');
 
   function boxCount(b){ return b.fl.reduce(function(x,y){return x+y},0); }
   function boxLine(b){ return FLAVORS.map(function(f,i){ return b.fl[i] ? f+' × '+b.fl[i] : null; }).filter(Boolean).join(', '); }
@@ -279,6 +297,8 @@
 
   function render(){
     renderBoxes();
+    document.getElementById('pick').classList.toggle('hidden', s.boxes.length>0);
+    document.getElementById('boxBtns').classList.toggle('wait', s.boxes.length===0);
     ['jam','sfSugar','sfPowder','f8','f12'].forEach(function(k){ document.getElementById('q_'+k).textContent=s[k]; });
     var c=calc();
     document.getElementById('sepWrap').classList.toggle('hidden', c.fricBoxes===0);
@@ -301,6 +321,8 @@
 
   var lb=document.getElementById('lb');
   document.addEventListener('click', function(e){
+    var mt=e.target.closest('img.mthumb');
+    if(mt){ lb.querySelector('img').src=mt.src; lb.querySelector('div').textContent=mt.alt; lb.classList.remove('hidden'); return; }
     var im=e.target.closest('img.thumb');
     if(im){ lb.querySelector('img').src=im.src; lb.querySelector('div').textContent=im.closest('.row').querySelector('.name').firstChild.textContent; lb.classList.remove('hidden'); return; }
     if(e.target.closest('#lb')){ lb.classList.add('hidden'); return; }
