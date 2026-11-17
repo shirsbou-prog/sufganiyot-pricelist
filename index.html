@@ -16,6 +16,8 @@
   .hero{background:#FFD6E0 url('files/header-bg.jpg') center/cover no-repeat;padding:26px 18px 22px;text-align:center;min-height:290px}
   .glass{display:inline-flex;flex-direction:row;align-items:center;gap:16px;padding:10px 18px;border-radius:18px;background:rgba(255,255,255,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
   .title{font-weight:800;font-size:44px;line-height:1.2;color:#fff;-webkit-text-stroke:4px #5a3418;paint-order:stroke fill;text-shadow:0 14px 30px rgba(0,0,0,.7);margin-top:18px}
+  .subt{display:inline-block;margin-top:12px;background:#000;color:#fff;font-weight:800;font-size:19px;padding:8px 20px;border-radius:30px;border:2px solid #D4AF37;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+  .subt b{color:#D4AF37}
   .strip{padding:12px 18px;background:#fff;border-bottom:1px solid #f1e3e8;font-size:12px;color:#555;display:flex;justify-content:space-between}
   .strip b{color:#8a6d1a}
   .content{background:#f3e3dc url('files/page-bg.jpg') center top/100% auto repeat-y;padding:16px 12px 4px}
@@ -112,6 +114,7 @@
       <img src="files/kosher.png" alt="כשר למהדרין" style="width:82px;height:auto;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.18))">
     </div>
     <div class="title">הזמנות לחנוכה</div>
+    <div class="subt">סופגניות בריוש חמאה <b>בעבודת יד</b></div>
   </div>
 
   <div class="strip"><span>כשר למהדרין · חלבי</span><b>מושב מזור</b></div>
@@ -125,9 +128,9 @@
     <div class="menu" id="menu"></div>
     <div class="pick" id="pick"><span class="arw">↓</span>לבחירת טעמי הסופגניות, <b>לחצו על המארז</b> שתרצו להזמין! אחרי הבחירה ייפתח תפריט הטעמים</div>
     <div class="boxes wait" id="boxBtns">
-      <button type="button" data-add="5">מארז 5<span>75 ₪</span><em>+ בחירה</em></button>
-      <button type="button" data-add="15">מארז 15<span>220 ₪</span><em>+ בחירה</em></button>
-      <button type="button" data-add="20">מארז 20<span>290 ₪</span><em>+ בחירה</em></button>
+      <button type="button" data-add="5">מארז 5 יח׳<span>75 ₪</span><em>+ בחירה</em></button>
+      <button type="button" data-add="15">מארז 15 יח׳<span>220 ₪</span><em>+ בחירה</em></button>
+      <button type="button" data-add="20">מארז 20 יח׳<span>290 ₪</span><em>+ בחירה</em></button>
     </div>
     <div id="boxList"></div>
   </div>
@@ -259,7 +262,7 @@
   function renderBoxes(){
     document.getElementById('boxList').innerHTML = s.boxes.map(function(b,bi){
       var n=boxCount(b), full=n===b.size;
-      var h='<div class="box'+(full?' full':'')+'" id="box'+bi+'"><div class="boxhead"><span class="bt">מארז '+b.size+' · '+BOX_PRICE[b.size]+' ₪</span>'+
+      var h='<div class="box'+(full?' full':'')+'" id="box'+bi+'"><div class="boxhead"><span class="bt">מארז '+b.size+' יח׳ · '+BOX_PRICE[b.size]+' ₪</span>'+
         '<span class="bc">'+(full?'המארז מלא ✓':'נבחרו '+n+' מתוך '+b.size)+'</span><button type="button" class="bdel" data-del="'+bi+'">הסרה</button></div>';
       if(b.open){
         h+='<div class="boxbody">'+FLAVORS.map(function(f,i){
